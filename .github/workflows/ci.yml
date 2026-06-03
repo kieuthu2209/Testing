@@ -157,9 +157,9 @@ jobs:
       #   run: npx @railway/cli up --service swagstore
 
       # Render (via deploy hook)
-      - name: Trigger Render deploy
-        run: |
-          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+      # - name: Trigger Render deploy
+      #  run: |
+      #    curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
 
       # Fly.io
       # - name: Deploy to Fly.io
