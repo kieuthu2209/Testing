@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": 1780471255476,
+    "name": "Staff Demo",
+    "email": "staff@example.com",
+    "address": "SwagStore Office",
+    "passwordHash": "$2a$10$IrPdpYI9KiNCzYoHwoEEa.4dZEOUvP1AjieDN0okiSoi.HL/Cszfe",
+    "role": "staff",
+    "createdAt": "2026-06-03T07:20:55.528Z"
+  }
+]
