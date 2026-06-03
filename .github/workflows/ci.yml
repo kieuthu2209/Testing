@@ -157,9 +157,9 @@ jobs:
       #   run: npx @railway/cli up --service swagstore
 
       # Render (via deploy hook)
-      # - name: Trigger Render deploy
-      #   run: |
-      #     curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+      - name: Trigger Render deploy
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
 
       # Fly.io
       # - name: Deploy to Fly.io
@@ -180,9 +180,3 @@ jobs:
       #       git pull origin main
       #       npm ci --omit=dev
       #       pm2 restart swagstore
-
-      - name: ✅ Deploy step placeholder
-        run: |
-          echo "Artifact ready at dist/swagstore.zip"
-          echo "Uncomment the deploy option that matches your host."
-          echo "Commit SHA: ${{ github.sha }}"
