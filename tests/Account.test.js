@@ -86,6 +86,16 @@ describe('Account.add()', () => {
     Account.add({ ...SAMPLE, email: 'second@example.com' });
     expect(Account.getAll()).toHaveLength(2);
   });
+
+  test('creates staff account when role is provided', () => {
+    const acc = Account.add({ ...SAMPLE, role: 'staff' });
+    expect(acc.role).toBe('staff');
+    expect(Account.isStaff(acc)).toBe(true);
+  });
+
+  test('throws when role is invalid', () => {
+    expect(() => Account.add({ ...SAMPLE, role: 'admin' })).toThrow('Invalid account role.');
+  });
 });
 
 // ── authenticate ─────────────────────────────────────────────
@@ -120,7 +130,33 @@ describe('Account.update()', () => {
     expect(updated.updatedAt).toBeDefined();
   });
 
+  test('updates account role', () => {
+    const acc = Account.add(SAMPLE);
+    const updated = Account.update(acc.id, { role: 'staff' });
+    expect(updated.role).toBe('staff');
+    expect(Account.isStaff(updated)).toBe(true);
+  });
+
+  test('throws when updating to invalid role', () => {
+    const acc = Account.add(SAMPLE);
+    expect(() => Account.update(acc.id, { role: 'manager' })).toThrow('Invalid account role.');
+  });
+
   test('throws for unknown id', () => {
     expect(() => Account.update(99999, {})).toThrow('Account not found.');
+  });
+});
+
+describe('Account role helpers', () => {
+  test('getCustomers returns only customer accounts', () => {
+    const customer = Account.add(SAMPLE);
+    Account.add({ ...SAMPLE, email: 'staff@example.com', role: 'staff' });
+
+    expect(Account.getCustomers()).toEqual([expect.objectContaining({ id: customer.id })]);
+  });
+
+  test('isCustomer treats missing role as customer', () => {
+    expect(Account.isCustomer({ id: 1 })).toBe(true);
+    expect(Account.isCustomer({ id: 2, role: 'staff' })).toBe(false);
   });
 });

@@ -10,6 +10,8 @@ const backup   = path.join(__dirname, '..', 'data', 'accounts.json.bak');
 
 function mockRes() {
   const res = {};
+  res.status   = jest.fn(() => res);
+  res.send     = jest.fn(() => res);
   res.render   = jest.fn(() => res);
   res.redirect = jest.fn(() => res);
   res.locals   = {};
@@ -36,6 +38,35 @@ describe('requireLogin', () => {
     const res  = mockRes();
     const next = jest.fn();
     authCtrl.requireLogin(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
+});
+
+describe('requireStaff', () => {
+  test('redirects to /login when not authenticated', () => {
+    const req = { session: {} };
+    const res = mockRes();
+    const next = jest.fn();
+    authCtrl.requireStaff(req, res, next);
+    expect(res.redirect).toHaveBeenCalledWith('/login?error=1');
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  test('returns 403 when authenticated user is not staff', () => {
+    const req = { session: { user: { id: 1, role: 'customer' } } };
+    const res = mockRes();
+    const next = jest.fn();
+    authCtrl.requireStaff(req, res, next);
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.send).toHaveBeenCalledWith('Forbidden');
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  test('calls next when authenticated user is staff', () => {
+    const req = { session: { user: { id: 1, role: 'staff' } } };
+    const res = mockRes();
+    const next = jest.fn();
+    authCtrl.requireStaff(req, res, next);
     expect(next).toHaveBeenCalled();
   });
 });
@@ -98,6 +129,14 @@ describe('login', () => {
     const res = mockRes();
     authCtrl.login(req, res);
     expect(res.redirect).toHaveBeenCalledWith('/checkout');
+  });
+
+  test('preserves staff role in session', () => {
+    Account.add({ ...CREDS, email: 'staff@test.com', role: 'staff' });
+    const req = { session: {}, body: { email: 'staff@test.com', password: CREDS.password } };
+    const res = mockRes();
+    authCtrl.login(req, res);
+    expect(req.session.user.role).toBe('staff');
   });
 });
 

@@ -1,0 +1,43 @@
+<div class="page-container">
+  <div class="page-header order-header">
+    <div>
+      <a href="/" class="back-link">← Back to Shop</a>
+      <h1 class="page-title">Staff Products</h1>
+      <p class="page-subtitle">Manage products available in the storefront.</p>
+    </div>
+    <div class="page-metrics">
+      <a href="/staff/products/new" class="btn-primary">Add Product</a>
+      <a href="/staff/orders/new" class="btn-ghost">Order for Customer</a>
+    </div>
+  </div>
+
+  {{#if products.length}}
+  <div class="staff-table">
+    {{#each products}}
+    <div class="staff-row">
+      <div class="staff-product-main">
+        <img src="{{image}}" alt="{{name}}" class="staff-product-img">
+        <div>
+          <p class="card-category">{{category}} · {{type}}</p>
+          <h2 class="staff-product-name">{{name}}</h2>
+          <p class="summary-detail">{{desc}}</p>
+        </div>
+      </div>
+      <div class="staff-row-actions">
+        <span class="card-price">${{price}}</span>
+        <a href="/staff/products/{{id}}/edit" class="btn-ghost">Edit</a>
+        <form method="POST" action="/staff/products/{{id}}/delete">
+          <button type="submit" class="btn-ghost btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="empty-state">
+    <h2 class="empty-title">No products</h2>
+    <p class="empty-sub">Create the first product to show it in the shop.</p>
+    <a href="/staff/products/new" class="btn-primary">Add Product</a>
+  </div>
+  {{/if}}
+</div>

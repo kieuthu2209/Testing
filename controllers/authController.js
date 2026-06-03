@@ -12,6 +12,12 @@ exports.requireLogin = (req, res, next) => {
   res.redirect('/login?error=1');
 };
 
+exports.requireStaff = (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login?error=1');
+  if (!Account.isStaff(req.session.user)) return res.status(403).send('Forbidden');
+  return next();
+};
+
 exports.showLogin = (req, res) => {
   const cart = getCart(req);
   res.render('login', {

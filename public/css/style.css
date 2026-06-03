@@ -904,3 +904,84 @@ main { flex: 1; }
   transition: background .2s, color .2s;
 }
 .btn-ghost:hover { background: var(--ink); color: var(--cream); }
+
+/* ── Staff Management ─────────────────────────────────────── */
+.staff-table {
+  display: grid;
+  gap: 16px;
+}
+.staff-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.staff-product-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+.staff-product-img {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  flex: 0 0 auto;
+}
+.staff-product-name {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.staff-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.staff-form {
+  max-width: 820px;
+}
+.staff-order-lines {
+  display: grid;
+  gap: 12px;
+}
+.staff-order-line {
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.staff-order-line:last-child {
+  border-bottom: none;
+}
+.staff-qty-input {
+  width: 72px;
+  height: 36px;
+}
+.btn-danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+@media (max-width: 720px) {
+  .staff-row {
+    grid-template-columns: 1fr;
+  }
+  .staff-product-main {
+    align-items: flex-start;
+  }
+  .staff-row-actions {
+    justify-content: flex-start;
+  }
+}

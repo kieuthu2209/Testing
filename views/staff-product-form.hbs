@@ -1,0 +1,65 @@
+<div class="page-container">
+  <div class="page-header">
+    <a href="/staff/products" class="back-link">← Back to Products</a>
+    <h1 class="page-title">{{title}}</h1>
+  </div>
+
+  {{#if error}}
+  <div class="alert alert-error">{{error}}</div>
+  {{/if}}
+
+  <form method="POST" action="{{action}}" class="checkout-form staff-form">
+    <section class="form-section">
+      <h2 class="form-section-title">Product Details</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input class="form-input" type="text" name="name" value="{{product.name}}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price</label>
+          <input class="form-input" type="number" step="0.01" min="0" name="price" value="{{product.price}}" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input" name="category" required>
+            <option value="">Choose category</option>
+            {{#each categories}}
+            <option value="{{this}}" {{#if (eq this ../product.category)}}selected{{/if}}>{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-input" name="type" required>
+            <option value="">Choose type</option>
+            {{#each types}}
+            <option value="{{this}}" {{#if (eq this ../product.type)}}selected{{/if}}>{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Image Path</label>
+          <input class="form-input" type="text" name="image" value="{{product.image}}" placeholder="/images/bolt-shirt.svg">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Badge</label>
+          <input class="form-input" type="text" name="badge" value="{{product.badge}}" placeholder="New">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-input form-textarea" name="desc">{{product.desc}}</textarea>
+      </div>
+    </section>
+
+    <button type="submit" class="btn-primary btn-large">{{#if isEdit}}Save Product{{else}}Create Product{{/if}}</button>
+  </form>
+</div>

@@ -5,6 +5,7 @@ const path   = require('path');
 const bcrypt = require('bcryptjs');
 
 const dataFile = path.join(__dirname, '..', 'data', 'accounts.json');
+const ROLES = new Set(['customer', 'staff']);
 
 function readAccounts() {
   try {
@@ -19,6 +20,17 @@ function readAccounts() {
 function writeAccounts(accounts) {
   const normalized = Array.isArray(accounts) ? accounts : [accounts];
   fs.writeFileSync(dataFile, JSON.stringify(normalized, null, 2));
+}
+
+function nextAccountId(accounts) {
+  const maxId = accounts.reduce((max, a) => Math.max(max, Number(a.id) || 0), 0);
+  return maxId ? maxId + 1 : Date.now();
+}
+
+function normalizeRole(role = 'customer') {
+  const normalized = String(role || 'customer').trim().toLowerCase();
+  if (!ROLES.has(normalized)) throw new Error('Invalid account role.');
+  return normalized;
 }
 
 class Account {
@@ -53,7 +65,7 @@ class Account {
     return Account.verifyPassword(password, user.passwordHash) ? user : null;
   }
 
-  static add({ name, email, password, address }) {
+  static add({ name, email, password, address, role = 'customer' }) {
     const normalizedEmail = String(email).trim().toLowerCase();
     if (!name || !normalizedEmail || !password || !address) {
       throw new Error('All fields are required.');
@@ -64,12 +76,12 @@ class Account {
 
     const accounts  = Account.getAll();
     const newAccount = {
-      id:           Date.now(),
+      id:           nextAccountId(accounts),
       name:         String(name).trim(),
       email:        normalizedEmail,
       address:      String(address).trim(),
       passwordHash: Account.hashPassword(password),
-      role:         'customer',
+      role:         normalizeRole(role),
       createdAt:    new Date().toISOString(),
     };
     accounts.push(newAccount);
@@ -81,9 +93,25 @@ class Account {
     const accounts = Account.getAll();
     const idx = accounts.findIndex(a => String(a.id) === String(id));
     if (idx === -1) throw new Error('Account not found.');
-    accounts[idx] = { ...accounts[idx], ...fields, updatedAt: new Date().toISOString() };
+    const normalizedFields = { ...fields };
+    if (Object.prototype.hasOwnProperty.call(normalizedFields, 'role')) {
+      normalizedFields.role = normalizeRole(normalizedFields.role);
+    }
+    accounts[idx] = { ...accounts[idx], ...normalizedFields, updatedAt: new Date().toISOString() };
     writeAccounts(accounts);
     return accounts[idx];
+  }
+
+  static getCustomers() {
+    return Account.getAll().filter(a => (a.role || 'customer') === 'customer');
+  }
+
+  static isStaff(account) {
+    return Boolean(account && account.role === 'staff');
+  }
+
+  static isCustomer(account) {
+    return Boolean(account && (account.role || 'customer') === 'customer');
   }
 }
 
