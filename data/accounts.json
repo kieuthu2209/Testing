@@ -4,7 +4,7 @@
     "name": "Staff Demo",
     "email": "staff@example.com",
     "address": "SwagStore Office",
-    "passwordHash": "$2a$10$IrPdpYI9KiNCzYoHwoEEa.4dZEOUvP1AjieDN0okiSoi.HL/Cszfe",
+    "passwordHash": "$2a$10$GveIz1hA46KFMbhEnZ/SY.MQ3ol0ZV2.PZwnq0jzBymktZLmfxg1e",
     "role": "staff",
     "createdAt": "2026-06-03T07:20:55.528Z"
   }
